@@ -1,0 +1,17 @@
+{
+  "name": "Kontemplativne duhovne vježbe",
+  "short_name": "Kontemplacije",
+  "description": "Interaktivni vodič kroz kontemplativne duhovne vježbe (Franz Jalics) — svih deset vremena.",
+  "lang": "hr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#efe8da",
+  "theme_color": "#efe8da",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
