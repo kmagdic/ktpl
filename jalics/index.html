@@ -159,10 +159,13 @@
         <sc-for list="{{ nagSections }}" as="s" hint-placeholder-count="3">
           <div style="margin-bottom:32px;animation:fadeUp .5s ease both;">
             <sc-if value="{{ s.hasHeading }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex;align-items:baseline;gap:12px;margin:0 0 12px;">
+              <div style="display:flex;align-items:baseline;gap:12px;margin:0 0 6px;">
                 <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#a8623a;font-weight:600;">{{ s.num }}</span>
                 <h3 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;color:#8a4e2d;margin:0;line-height:1.12;">{{ s.heading }}</h3>
               </div>
+              <sc-if value="{{ s.hasSummary }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 0 16px 28px;font-family:'Spectral',serif;font-weight:300;font-style:italic;font-size:14.5px;color:#7a7161;line-height:1.55;text-wrap:pretty;">{{ s.summary }}</div>
+              </sc-if>
             </sc-if>
             <sc-for list="{{ s.paras }}" as="p" hint-placeholder-count="2">
               <p style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;">{{ p }}</p>
@@ -995,6 +998,7 @@ class Component extends DCLogic {
       const hasH = !!s.heading; if (hasH) hn++;
       const hasList = !!(s.numbered && s.numbered.length);
       return { heading: s.heading, hasHeading: hasH, noHeading: !hasH, num: hasH ? num2(hn) : '', paras: s.paras,
+               summary: s.summary || '', hasSummary: hasH && !!s.summary,
                hasList: hasList, numbered: hasList ? decorateNum(s.numbered) : [] };
     });
 
