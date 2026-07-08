@@ -30,6 +30,11 @@
   @keyframes orbPulse { from { transform: scale(1); opacity: .55; } to { transform: scale(1.14); opacity: .85; } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes softIn { from { opacity: 0; } to { opacity: 1; } }
+  /* Dark mode: invertiramo svijetli UI i vraćamo boje slikama (protu-invert). Session je izuzet. */
+  .jalics-dark { filter: invert(1) hue-rotate(180deg); }
+  .jalics-dark img { filter: invert(1) hue-rotate(180deg); }
+  html.jalics-dark-bg, html.jalics-dark-bg body { background: #14120f; }
+  html.jalics-dark-bg { color-scheme: dark; }
 </style>
 </helmet>
 
@@ -37,7 +42,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#efe8da"/><circle cx="50" cy="50" r="17" fill="none" stroke="#2b2620" stroke-width="1.4"/><circle cx="50" cy="50" r="4" fill="#a8623a"/></svg>
 </template>
 
-<div style="min-height:100vh;background:#efe8da;color:#2b2620;font-family:'Spectral',Georgia,serif;font-weight:400;line-height:1.6;position:relative;">
+<div class="{{ rootClass }}" style="min-height:100vh;background:#efe8da;color:#2b2620;font-family:'Spectral',Georgia,serif;font-weight:400;line-height:1.6;position:relative;">
 
   <!-- ============ HOME ============ -->
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
@@ -104,6 +109,10 @@
       <button onClick="{{ toggleSound }}" style="background:none;border:1px solid rgba(43,38,32,0.18);border-radius:999px;padding:8px 16px;cursor:pointer;color:#544d42;font-size:13.5px;display:flex;align-items:center;gap:8px;">
         <sc-if value="{{ sound }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>Zvučni signal uključen</sc-if>
         <sc-if value="{{ soundOff }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m23 9-6 6"/><path d="m17 9 6 6"/></svg>Zvučni signal isključen</sc-if>
+      </button>
+      <button onClick="{{ toggleTheme }}" aria-label="Tamni način" style="background:none;border:1px solid rgba(43,38,32,0.18);border-radius:999px;padding:8px 16px;cursor:pointer;color:#544d42;font-size:13.5px;display:flex;align-items:center;gap:8px;">
+        <sc-if value="{{ notDark }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>Tamni način</sc-if>
+        <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Svijetli način</sc-if>
       </button>
     </div>
     <p style="text-align:center;color:#a59a86;font-size:12.5px;margin-top:26px;line-height:1.6;">Napredak i bilješke spremaju se na ovom uređaju.<br>Poštuj svoj nutarnji ritam — ne prelazi dalje prije nego si spreman.</p>
@@ -495,6 +504,10 @@
     <div style="position:fixed;top:0;left:0;right:0;z-index:40;height:52px;display:flex;align-items:center;gap:6px;padding:0 8px;background:rgba(239,232,218,0.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(43,38,32,0.1);">
       <button onClick="{{ openDrawer }}" aria-label="Izbornik" style="background:none;border:none;cursor:pointer;color:#2b2620;padding:9px;display:flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg></button>
       <div style="flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#2b2620;letter-spacing:0.01em;">Kontemplacije - Franz Jalics</div>
+      <button onClick="{{ toggleTheme }}" aria-label="Tamni način" style="background:none;border:none;cursor:pointer;color:#a59a86;padding:9px;display:flex;">
+        <sc-if value="{{ notDark }}" hint-placeholder-val="{{ true }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></sc-if>
+        <sc-if value="{{ dark }}" hint-placeholder-val="{{ false }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></sc-if>
+      </button>
       <button onClick="{{ toggleSound }}" aria-label="Zvuk" style="background:none;border:none;cursor:pointer;color:#6b6357;padding:9px;display:flex;">
         <sc-if value="{{ sound }}" hint-placeholder-val="{{ true }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></sc-if>
         <sc-if value="{{ soundOff }}" hint-placeholder-val="{{ false }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m23 9-6 6"/><path d="m17 9 6 6"/></svg></sc-if>
@@ -540,7 +553,7 @@ class Component extends DCLogic {
     sPhase: null, gStep: 0, gElapsed: 0, gPlaying: true,
     block: 1, silLeft: 0, silTotal: 0, silRunning: true,
     inPause: false, pauseLeft: 0, silMinutes: 20,
-    progress: {}, sound: true,
+    progress: {}, sound: true, theme: 'auto', systemDark: false,
     canInstall: false, installHelp: false, standalone: false, drawer: false,
   };
 
@@ -833,7 +846,15 @@ class Component extends DCLogic {
       const p = JSON.parse(localStorage.getItem('jalics_progress') || '{}');
       const s = JSON.parse(localStorage.getItem('jalics_settings') || '{}');
       const soundDefault = this.props.soundDefault !== false;
-      this.setState({ progress: p || {}, sound: s.sound === undefined ? soundDefault : s.sound });
+      const sysDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      this.setState({ progress: p || {}, sound: s.sound === undefined ? soundDefault : s.sound,
+                      theme: s.theme === undefined ? 'auto' : s.theme, systemDark: sysDark });
+      // prati promjenu sistemskog moda dok je tema 'auto'
+      if (window.matchMedia) {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const onSys = (e) => this.setState({ systemDark: e.matches });
+        mq.addEventListener ? mq.addEventListener('change', onSys) : mq.addListener(onSys);
+      }
     } catch (e) {}
     fetch('data/vremena.json')
       .then(r => r.json())
@@ -1032,6 +1053,10 @@ class Component extends DCLogic {
     const progressPct = (st.sPhase === 'silence' && !st.inPause) ? silPct.toFixed(2) + '%' : stepPct.toFixed(2) + '%';
 
     const isSession = st.view === 'session';
+    // dark mode: 'auto' prati sustav; inače eksplicitno; session je već taman pa filter ne primjenjujemo
+    const dark = st.theme === 'dark' || (st.theme === 'auto' && st.systemDark);
+    const rootClass = (dark && !isSession) ? 'jalics-dark' : '';
+    try { document.documentElement.classList.toggle('jalics-dark-bg', dark); } catch (e) {}
     const showControls = isSession && (st.sPhase === 'guide' || st.sPhase === 'silence');
     const showOrb = isSession && orbOn && (st.sPhase === 'guide' || st.sPhase === 'silence') && !st.inPause;
 
@@ -1064,7 +1089,9 @@ class Component extends DCLogic {
 
       heroImg: this.heroImg, vImg: this.imgs[vi], vSummary: this.summaries[vi],
       cards, sound: st.sound, soundOff: !st.sound,
-      toggleSound: () => { const s = !st.sound; this.setState({ sound: s }); try { localStorage.setItem('jalics_settings', JSON.stringify({ sound: s })); } catch (e) {} },
+      toggleSound: () => { const s = !st.sound; this.setState({ sound: s }); try { localStorage.setItem('jalics_settings', JSON.stringify({ sound: s, theme: st.theme })); } catch (e) {} },
+      dark, notDark: !dark, rootClass,
+      toggleTheme: () => { const t = dark ? 'light' : 'dark'; this.setState({ theme: t }); try { localStorage.setItem('jalics_settings', JSON.stringify({ sound: st.sound, theme: t })); } catch (e) {} },
 
       goHome: () => this.setState({ view: 'home', drawer: false }),
       contentKey: 't' + vi + st.tab,
