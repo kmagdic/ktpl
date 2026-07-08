@@ -357,7 +357,7 @@
           <span style="{{ smjChevron }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </div>
       </div>
-      <sc-if value="{{ smjOpen }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ smjOpen }}" hint-placeholder-val="{{ false }}">
       <p style="max-width:640px;margin:16px 0 20px;color:#6b6357;font-size:15.5px;line-height:1.68;">Praktične smjernice za održavanje kontemplativne molitve u svakodnevnici. Prva smjernica — <em>prioriteti</em> — temelj je svega ostaloga.</p>
       <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:20px;">
         <sc-for list="{{ smjernice }}" as="n" hint-placeholder-count="7">
@@ -562,7 +562,7 @@ class Component extends DCLogic {
     sPhase: null, gStep: 0, gElapsed: 0, gPlaying: true,
     block: 1, silLeft: 0, silTotal: 0, silRunning: true,
     inPause: false, pauseLeft: 0, silMinutes: 20,
-    progress: {}, sound: true, theme: 'auto', systemDark: false, smjOpen: true,
+    progress: {}, sound: true, theme: 'auto', systemDark: false, smjOpen: false,
     canInstall: false, installHelp: false, standalone: false, drawer: false,
   };
 
