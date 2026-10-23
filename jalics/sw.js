@@ -1,9 +1,10 @@
 /* Service worker — Kontemplativne duhovne vježbe (PWA offline shell) */
-const CACHE = 'kontempl-1.9';
+const CACHE = 'kontempl-2.2';
 const CORE = [
   './',
   './support.js',
   './data/vremena.json',
+  './data/uvod.json',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png'

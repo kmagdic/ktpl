@@ -25,9 +25,9 @@ Ključno:
   service worker rade **samo preko HTTPS-a** (ili `localhost`).
 
 - Nakon **svake promjene** `index.html`, `support.js` ili `data/vremena.json`
-  podići verziju za 0.1 (1.9 → 2.0) na **dva mjesta**: `appVersion` u
+  podići verziju za 0.1 (2.2 → 2.3) na **dva mjesta**: `appVersion` u
   `index.html` (broj + datum, prikazuje se na dnu početnog zaslona:
-  „Verzija 1.9 · 23. 10. 2026.“) i `CACHE` u `jalics/sw.js` (`kontempl-1.9`).
+  „Verzija 2.2 · 23. 10. 2026.“) i `CACHE` u `jalics/sw.js` (`kontempl-2.2`).
   Promjena `CACHE` briše staru predmemoriju. Service worker je *network-first* za
   vlastite datoteke (offline pada na predmemoriju), pa korisnici novu verziju
   dobiju već pri sljedećem učitavanju.
@@ -42,6 +42,18 @@ Ključno:
   Chrome osvježi WebAPK (do nekoliko dana; najbrže: deinstalirati i ponovno
   instalirati). U CSS komentarima ne pisati oznake tagova (npr. `</style>`).
 
+### Poveznice (dijeljenje)
+Svaki ekran ima adresu u `#` dijelu URL-a (npr.
+`https://kmagdic.github.io/ktpl/jalics/#/uvod/8`):
+`#/uvod[/N]`, `#/prirucnik`, `#/vrijeme/N[/nagovor|vjezba|razgovori|osvrt]`,
+`#/vrijeme/N/nagovor/K` (odjeljak nagovora), `#/vrijeme/N/razgovori/K`
+(otvoren razgovor), `#/vjezba/N` (= vježba vremena N). Logika je u
+`routeHash`/`applyHash`/`syncHash` u `index.html`: adresa se ažurira dok se
+korisnik kreće (novi ekran = novi unos u povijesti, pa radi Natrag), a pri
+otvaranju se skače na sidro (`uvod-N`, `nag-K`, `razg-K`). Gumbi s ikonom
+lanca dijele poveznicu (mobitel: sustavni izbornik za dijeljenje; računalo:
+kopira u međuspremnik). `#app` je rezerviran za testiranje standalone načina.
+
 ### Sadržaj knjige → `vremena.json`
 Izvor teksta je **lektorirano izdanje** knjige (Zaklada biskup Josip Lang,
 2026.), PDF u `nagovori/` (InDesign izvoz, tekst se čisto izvlači).
@@ -52,6 +64,14 @@ python3 scripts/pdf_to_vremena.py "nagovori/<knjiga>.pdf" --report /tmp/report.t
 ```
 - Treba `pdftotext` (poppler: `brew install poppler`). Zadano čita i piše
   `jalics/data/vremena.json` (`--old`, `--out` za druge putanje).
+- Ista skripta piše i **`jalics/data/uvod.json`** (`--uvod-out`): Uvod knjige
+  (str. 17–34) — `{title, intro[], introNotes?[], sections[{num, heading,
+  paras, notes?[{n, text}]}]}`. Naslovi odjeljaka provjeravaju se prema
+  sadržaju (TOC); fusnote se skupljaju s dna stranica, a oznake u tekstu
+  (`vježbi1`) postaju superskript (`vježbi¹`) redom 1, 2, 3… Prikazuje se na
+  ekranu Uvod (sitna poveznica „Uvod u knjigu“ ispod gumba Priručnik i u
+  izborniku — namjerno neupadljivo); na vrhu je sadržaj uvoda s poveznicama
+  na odjeljke, a ispod svakog odjeljka „↑ Sadržaj uvoda“.
 - Skripta prepoznaje strukturu knjige: `PRVO … DESETO VRIJEME`, `I. NAGOVOR:`
   + naslov, odjeljci `N. Naslov`, `II. UPUTE ZA …`, `III. (OPROŠTAJNI)
   RAZGOVORI` s `N.M. IME`, replike `Govornik: …` (i `Ime (napomena): …`),

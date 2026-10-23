@@ -115,6 +115,9 @@
     <button onClick="{{ openPrirucnik }}" style="margin-top:20px;width:100%;background:none;border:1px dashed rgba(168,98,58,0.45);border-radius:6px;padding:16px;cursor:pointer;color:#8a4e2d;font-family:'Spectral',serif;font-size:15.5px;display:flex;align-items:center;justify-content:center;gap:10px;" style-hover="background:#fbf7ee;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Priručnik — sve vježbe na jednom mjestu
     </button>
+    <sc-if value="{{ hasUvod }}" hint-placeholder-val="{{ true }}">
+      <div style="text-align:center;margin-top:12px;"><button onClick="{{ openUvod }}" style="background:none;border:none;cursor:pointer;color:#8a7f6d;font-family:'Spectral',serif;font-size:14px;padding:4px 8px;text-decoration:underline;text-decoration-color:rgba(138,127,109,0.4);text-underline-offset:3px;" style-hover="color:#8a4e2d;">Uvod u knjigu</button></div>
+    </sc-if>
 
     <sc-if value="{{ showInstall }}" hint-placeholder-val="{{ true }}">
       <button onClick="{{ installApp }}" style="margin-top:12px;width:100%;background:#2b2620;border:none;border-radius:6px;padding:15px;cursor:pointer;color:#f2ead9;font-family:'Spectral',serif;font-size:15.5px;display:flex;align-items:center;justify-content:center;gap:10px;" style-hover="background:#3a342b;">
@@ -171,7 +174,8 @@
       <div style="max-width:760px;margin:0 auto;padding:0 28px;">
         <div style="display:flex;align-items:center;gap:9px;padding:9px 0 3px;">
           <span style="font-family:'Cormorant Garamond',serif;font-size:15px;color:#a8623a;font-weight:600;line-height:1;">{{ v.num }}</span>
-          <span style="font-size:13px;color:#7a7161;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.nagovorTitle }}</span>
+          <span style="font-size:13px;color:#7a7161;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;">{{ v.nagovorTitle }}</span>
+          <button onClick="{{ shareHere }}" aria-label="Podijeli poveznicu" title="Podijeli poveznicu" style="background:none;border:none;cursor:pointer;color:#b9ae9a;padding:4px;display:inline-flex;align-self:center;flex-shrink:0;" style-hover="color:#8a4e2d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
         </div>
         <div style="display:flex;gap:4px;overflow-x:auto;">
           <button onClick="{{ tab.nagovor }}" style="{{ tabStyleNagovor }}">Nagovor</button>
@@ -191,11 +195,12 @@
           <div style="font-size:15px;line-height:1.6;color:#7a7161;font-style:italic;">{{ vSummary }}</div>
         </div>
         <sc-for list="{{ nagSections }}" as="s" hint-placeholder-count="3">
-          <div style="margin-bottom:32px;animation:fadeUp .5s ease both;">
+          <div id="{{ s.anchor }}" style="margin-bottom:32px;animation:fadeUp .5s ease both;scroll-margin-top:{{ anchorMargin }};">
             <sc-if value="{{ s.hasHeading }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;align-items:baseline;gap:12px;margin:0 0 6px;">
                 <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#a8623a;font-weight:600;">{{ s.num }}</span>
-                <h3 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;color:#8a4e2d;margin:0;line-height:1.12;">{{ s.heading }}</h3>
+                <h3 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;color:#8a4e2d;margin:0;line-height:1.12;flex:1;">{{ s.heading }}</h3>
+                <button onClick="{{ s.share }}" aria-label="Podijeli poveznicu na odjeljak" title="Podijeli poveznicu na odjeljak" style="background:none;border:none;cursor:pointer;color:#b9ae9a;padding:4px;display:inline-flex;align-self:center;flex-shrink:0;" style-hover="color:#8a4e2d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
               </div>
               <sc-if value="{{ s.hasSummary }}" hint-placeholder-val="{{ false }}">
                 <div style="margin:0 0 16px 28px;font-family:'Spectral',serif;font-weight:300;font-style:italic;font-size:14.5px;color:#7a7161;line-height:1.55;text-wrap:pretty;">{{ s.summary }}</div>
@@ -285,7 +290,7 @@
           <p style="color:#7a7161;font-size:15.5px;line-height:1.7;margin:0 0 22px;font-style:italic;">Iskustva egzercitanata u razgovoru s voditeljem. Ne čitaj sve odjednom — najviše dva do tri. Pusti da djeluju na tebe, a ne da ih odmah primjenjuješ na druge.</p>
           <div style="display:flex;flex-direction:column;gap:8px;">
             <sc-for list="{{ razgovori }}" as="r" hint-placeholder-count="6">
-              <div style="border:1px solid rgba(43,38,32,0.11);border-radius:4px;overflow:hidden;background:#fbf7ee;">
+              <div id="{{ r.anchor }}" style="border:1px solid rgba(43,38,32,0.11);border-radius:4px;overflow:hidden;background:#fbf7ee;scroll-margin-top:{{ anchorMargin }};">
                 <button onClick="{{ r.toggle }}" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:15px 18px;display:flex;align-items:center;gap:12px;">
                   <span style="font-family:'Cormorant Garamond',serif;font-size:14px;color:#a8623a;min-width:26px;">{{ r.n }}</span>
                   <span style="flex:1;min-width:0;">
@@ -302,6 +307,7 @@
                         <div style="font-size:16.5px;line-height:1.68;color:#3f3930;white-space:pre-line;">{{ t.text }}</div>
                       </div>
                     </sc-for>
+                    <div style="text-align:right;margin-top:14px;"><button onClick="{{ r.share }}" style="background:none;border:none;cursor:pointer;color:#a59a86;font-family:'Spectral',serif;font-size:12.5px;padding:2px 0;display:inline-flex;align-items:center;gap:6px;" style-hover="color:#8a4e2d;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Podijeli razgovor</button></div>
                   </div>
                 </sc-if>
               </div>
@@ -429,10 +435,65 @@
           <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
             <button onClick="{{ e.practice }}" style="background:#a8623a;border:none;color:#fbf7ee;border-radius:4px;padding:10px 18px;font-size:14.5px;cursor:pointer;font-family:'Spectral',serif;" style-hover="background:#b56d43;">Vježbaj</button>
             <button onClick="{{ e.open }}" style="background:none;border:1px solid rgba(43,38,32,0.2);color:#4f483d;border-radius:4px;padding:10px 18px;font-size:14.5px;cursor:pointer;font-family:'Spectral',serif;">Otvori vrijeme</button>
+            <button onClick="{{ e.share }}" aria-label="Podijeli poveznicu na vježbu" title="Podijeli poveznicu na vježbu" style="background:none;border:none;color:#a59a86;padding:10px 6px;font-size:14px;cursor:pointer;font-family:'Spectral',serif;display:inline-flex;align-items:center;gap:6px;" style-hover="color:#8a4e2d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Podijeli</button>
           </div>
         </div>
       </sc-for>
     </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ UVOD ============ -->
+  <sc-if value="{{ isUvod }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:760px;margin:0 auto;padding:0 28px 110px;">
+    <sc-if value="{{ showBack }}" hint-placeholder-val="{{ true }}">
+    <div style="position:sticky;top:0;z-index:5;background:rgba(239,232,218,0.94);backdrop-filter:blur(8px);margin:0 -28px;padding:14px 28px;border-bottom:1px solid rgba(43,38,32,0.1);">
+      <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;color:#7a7161;display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:4px 0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Sadržaj</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ false }}"><div style="height:44px;"></div></sc-if>
+    <div style="text-align:center;padding:42px 0 26px;">
+      <div style="letter-spacing:0.3em;text-transform:uppercase;font-size:11.5px;color:#a8623a;margin-bottom:12px;">Franz Jalics</div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,6vw,48px);line-height:1.05;margin:0;">Uvod</h1>
+    </div>
+    <nav id="uvod-sadrzaj" style="scroll-margin-top:{{ uvodScrollMargin }};background:#fbf7ee;border:1px solid rgba(43,38,32,0.1);border-radius:6px;padding:14px 8px;margin-bottom:34px;">
+      <div style="letter-spacing:0.22em;text-transform:uppercase;font-size:10.5px;color:#8a7f6d;padding:0 12px 8px;">Sadržaj uvoda</div>
+      <sc-for list="{{ uvodSections }}" as="s" hint-placeholder-count="12">
+        <button onClick="{{ s.go }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:7px 12px;border-radius:4px;display:flex;align-items:baseline;gap:12px;font-family:'Spectral',serif;font-size:15.5px;color:#3f3930;line-height:1.35;" style-hover="background:rgba(168,98,58,0.07);color:#8a4e2d;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:15px;color:#a8623a;font-weight:600;min-width:20px;">{{ s.num }}</span>{{ s.heading }}
+        </button>
+      </sc-for>
+    </nav>
+    <sc-for list="{{ uvodIntro }}" as="p" hint-placeholder-count="2">
+      <p style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;">{{ p }}</p>
+    </sc-for>
+    <sc-if value="{{ hasUvodIntroNotes }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:6px;padding-top:10px;border-top:1px solid rgba(43,38,32,0.1);display:flex;flex-direction:column;gap:6px;">
+        <sc-for list="{{ uvodIntroNotes }}" as="n" hint-placeholder-count="1">
+          <div style="font-size:13px;line-height:1.55;color:#8a7f6d;"><span style="color:#a8623a;">{{ n.mark }}</span> {{ n.text }}</div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-for list="{{ uvodSections }}" as="s" hint-placeholder-count="3">
+      <div id="{{ s.anchor }}" style="margin-top:34px;scroll-margin-top:{{ uvodScrollMargin }};">
+        <div style="display:flex;align-items:baseline;gap:12px;margin:0 0 10px;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#a8623a;font-weight:600;">{{ s.num }}</span>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;color:#8a4e2d;margin:0;line-height:1.12;flex:1;">{{ s.heading }}</h3>
+          <button onClick="{{ s.share }}" aria-label="Podijeli poveznicu na odjeljak" title="Podijeli poveznicu na odjeljak" style="background:none;border:none;cursor:pointer;color:#b9ae9a;padding:4px;display:inline-flex;align-self:center;flex-shrink:0;" style-hover="color:#8a4e2d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+        </div>
+        <sc-for list="{{ s.paras }}" as="p" hint-placeholder-count="2">
+          <p style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;">{{ p }}</p>
+        </sc-for>
+        <sc-if value="{{ s.hasNotes }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:6px;padding-top:10px;border-top:1px solid rgba(43,38,32,0.1);display:flex;flex-direction:column;gap:6px;">
+            <sc-for list="{{ s.notes }}" as="n" hint-placeholder-count="1">
+              <div style="font-size:13px;line-height:1.55;color:#8a7f6d;"><span style="color:#a8623a;">{{ n.mark }}</span> {{ n.text }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="text-align:right;margin-top:8px;"><button onClick="{{ uvodToTop }}" style="background:none;border:none;cursor:pointer;color:#a59a86;font-family:'Spectral',serif;font-size:12.5px;padding:2px 0;" style-hover="color:#8a4e2d;">↑ Sadržaj uvoda</button></div>
+      </div>
+    </sc-for>
   </div>
   </sc-if>
 
@@ -557,6 +618,10 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div class="{{ chromeClass }}" style="position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;max-width:calc(100vw - 32px);background:#2b2620;color:#f4ecdc;border-radius:999px;padding:10px 18px;font-size:14px;box-shadow:0 10px 30px -12px rgba(0,0,0,0.5);animation:softIn .2s ease both;overflow-wrap:anywhere;text-align:center;">{{ toast }}</div>
+  </sc-if>
+
   <!-- ============ DRAWER ============ -->
   <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:50;background:rgba(20,18,14,0.45);animation:softIn .25s ease both;"></div>
@@ -568,6 +633,9 @@
       <div style="flex:1;overflow-y:auto;padding:10px 0 20px;">
         <button onClick="{{ goHome }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:13px 20px;font-family:'Spectral',serif;font-size:16px;color:#3a342b;display:flex;align-items:center;gap:12px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#a8623a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9"/></svg>Naslovnica</button>
         <button onClick="{{ openPrirucnik }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:13px 20px;font-family:'Spectral',serif;font-size:16px;color:#3a342b;display:flex;align-items:center;gap:12px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#a8623a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Priručnik</button>
+        <sc-if value="{{ hasUvod }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openUvod }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:11px 20px;font-family:'Spectral',serif;font-size:15px;color:#7a7161;display:flex;align-items:center;gap:12px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#a59a86" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Uvod u knjigu</button>
+        </sc-if>
         <div style="letter-spacing:0.2em;text-transform:uppercase;font-size:10.5px;color:#a59a86;padding:16px 20px 6px;">Vremena</div>
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="0">
           <button onClick="{{ c.open }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:11px 20px;font-family:'Spectral',serif;font-size:15.5px;color:#3f3930;display:flex;align-items:center;gap:12px;">
@@ -584,7 +652,8 @@
 class Component extends DCLogic {
   state = {
     view: 'home', vi: 0, tab: 'nagovor',
-    data: null, loaded: false,
+    data: null, loaded: false, uvod: null,
+    sub: 0, subKey: '', toast: '',
     openR: -1,
     // session
     sPhase: null, gStep: 0, gElapsed: 0, gPlaying: true,
@@ -634,7 +703,7 @@ class Component extends DCLogic {
   ];
 
   // pri svakom izdanju +0.1 (1.9 → 2.0); isti broj u CACHE u sw.js (kontempl-1.9)
-  appVersion = '1.9 · 23. 10. 2026.';
+  appVersion = '2.2 · 23. 10. 2026.';
   heroImg = 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1900&q=74';
   imgs = [
     'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1500&q=74',
@@ -899,6 +968,19 @@ class Component extends DCLogic {
       .then(r => r.json())
       .then(d => this.setState({ data: d, loaded: true }))
       .catch(() => this.setState({ loaded: true }));
+    fetch('data/uvod.json')
+      .then(r => r.json())
+      .then(u => this.setState({ uvod: u }))
+      .catch(() => {});
+    // poveznice: otvori ekran iz adrese; Natrag/Naprijed u pregledniku
+    try {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      this.applyHash(location.hash);
+      this._hash = this.parseHash(location.hash) ? location.hash : this.routeHash();
+      this._page = this.state.view + '|' + this.state.vi;
+      window.addEventListener('popstate', () => this.applyHash(location.hash));
+      this._routeReady = true;
+    } catch (e) {}
     // PWA
     try {
       const applyMode = () => {
@@ -916,7 +998,95 @@ class Component extends DCLogic {
     } catch (e) {}
   }
   componentWillUnmount() { if (this.timer) clearInterval(this.timer); }
-  componentDidUpdate() { this.syncImgs(); }
+  componentDidUpdate() { this.syncImgs(); this.syncHash(); }
+
+  // ---- Poveznice (URL #) za dijeljenje ----
+  // #/uvod[/N]  #/prirucnik  #/vrijeme/N[/nagovor|vjezba|razgovori|osvrt[/K]]  #/vjezba/N
+  // K = odjeljak nagovora ili redni broj razgovora. 'sub' vrijedi samo za ekran na kojem je postavljen (subKey).
+  subKeyOf(st) { return st.view + '|' + st.vi + '|' + st.tab; }
+  routeHash() {
+    const st = this.state;
+    const sub = st.subKey === this.subKeyOf(st) ? st.sub : 0;
+    if (st.view === 'uvod') return '#/uvod' + (sub ? '/' + sub : '');
+    if (st.view === 'prirucnik') return '#/prirucnik';
+    if (st.view === 'vrijeme' || st.view === 'session') {
+      const tab = st.view === 'session' ? 'vjezba' : st.tab;
+      let h = '#/vrijeme/' + (st.vi + 1);
+      if (tab === 'razgovori' && st.openR >= 0) h += '/razgovori/' + (st.openR + 1);
+      else if (tab === 'nagovor' && sub) h += '/nagovor/' + sub;
+      else if (tab !== 'nagovor') h += '/' + tab;
+      return h;
+    }
+    return '';
+  }
+  parseHash(hash) {
+    const m = (hash || '').match(/^#\/(uvod|prirucnik|vrijeme|vjezba)(?:\/(\d+))?(?:\/(nagovor|vjezba|razgovori|osvrt))?(?:\/(\d+))?\/?$/);
+    return m ? { page: m[1], a: +m[2] || 0, tab: m[3], k: +m[4] || 0 } : null;
+  }
+  applyHash(hash) {
+    const r = this.parseHash(hash);
+    if (!r) { if (!hash && this.state.view !== 'session') this.setState({ view: 'home', drawer: false }); return; }
+    this._hash = hash;
+    if (r.page === 'uvod') {
+      this.setState({ view: 'uvod', drawer: false, sub: r.a, subKey: this.subKeyOf(Object.assign({}, this.state, { view: 'uvod' })) });
+      return this.scrollToId(r.a ? 'uvod-' + r.a : null);
+    }
+    if (r.page === 'prirucnik') { this.setState({ view: 'prirucnik', drawer: false }); return this.scrollToId(null); }
+    if (this.state.view === 'session') this.stopTimer();
+    const vi = Math.min(9, Math.max(0, (r.a || 1) - 1));
+    const tab = r.page === 'vjezba' ? 'vjezba' : (r.tab || 'nagovor');
+    const next = { view: 'vrijeme', vi, tab, drawer: false, sPhase: null, silMinutes: this.flows[vi].defaultMinutes,
+                   openR: tab === 'razgovori' && r.k ? r.k - 1 : -1, sub: tab === 'nagovor' ? r.k : 0 };
+    next.subKey = this.subKeyOf(next);
+    this.setState(next);
+    this.scrollToId(tab === 'razgovori' && r.k ? 'razg-' + r.k : tab === 'nagovor' && r.k ? 'nag-' + r.k : null);
+  }
+  // pričeka da se sadržaj (podaci) iscrta pa skoči na sidro
+  // (sadržaj se iscrtava postupno, pa skok ponavljamo dok se položaj ne smiri)
+  scrollToId(id) {
+    let tries = 0, settled = 0;
+    const go = () => {
+      if (!id) { try { window.scrollTo(0, 0); } catch (e) {} return; }
+      const el = document.getElementById(id);
+      if (el) {
+        const before = window.scrollY;
+        el.scrollIntoView({ block: 'start' });
+        settled = Math.abs(window.scrollY - before) < 2 ? settled + 1 : 0;
+        if (settled < 3 && tries++ < 50) setTimeout(go, 120);
+      } else if (tries++ < 50) setTimeout(go, 120);
+    };
+    setTimeout(go, 60);
+  }
+  syncHash() {
+    if (!this._routeReady) return;
+    const h = this.routeHash();
+    if (h === this._hash) return;
+    this._hash = h;
+    const st = this.state;
+    const page = st.view + '|' + st.vi;
+    try {
+      const url = location.pathname + location.search + h;
+      // novi ekran → novi unos u povijesti (gumb Natrag radi); unutar ekrana samo zamjena
+      if (page !== this._page) history.pushState(null, '', url); else history.replaceState(null, '', url);
+    } catch (e) {}
+    this._page = page;
+  }
+  setSub(n, id) {
+    this.setState({ sub: n, subKey: this.subKeyOf(this.state) });
+    this.scrollToId(id);
+  }
+  share(title, hash) {
+    // samo adresa aplikacije + #ruta (bez ?parametara iz trenutne adrese)
+    const url = location.origin + location.pathname + (hash === undefined ? this.routeHash() : hash);
+    const toast = (t) => { this.setState({ toast: t }); clearTimeout(this._toastT); this._toastT = setTimeout(() => this.setState({ toast: '' }), 2600); };
+    if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      navigator.share({ title: title || document.title, url }).catch(() => {});
+      return;
+    }
+    try {
+      navigator.clipboard.writeText(url).then(() => toast('Poveznica je kopirana'), () => toast(url));
+    } catch (e) { toast(url); }
+  }
   syncImgs() {
     try {
       document.querySelectorAll('img[data-src]').forEach(el => {
@@ -1020,6 +1190,16 @@ class Component extends DCLogic {
     };
     const roman = ['I', 'II', 'III', 'IV', 'V'];
     const num2 = (n) => (n < 10 ? '0' : '') + n;
+    const sup = (n) => String(n).replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+    const U = st.uvod;
+    const noteList = (ns) => (ns || []).map(n => ({ mark: sup(n.n), text: n.text }));
+    const uvodIntroNotes = U ? noteList(U.introNotes) : [];
+    const jump = (id) => { try { document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} };
+    const uvodSections = U ? U.sections.map(s => ({ num: num2(s.num), heading: s.heading, paras: s.paras,
+      anchor: 'uvod-' + s.num,
+      go: () => { this.setState({ sub: s.num, subKey: this.subKeyOf(st) }); jump('uvod-' + s.num); },
+      share: () => this.share(s.heading + ' — Uvod', '#/uvod/' + s.num),
+      hasNotes: !!(s.notes && s.notes.length), notes: noteList(s.notes) })) : [];
 
     // tab styles
     const tabStyle = (active) => 'background:none;border:none;cursor:pointer;padding:11px 4px;margin-right:20px;font-family:Spectral,serif;font-size:15px;color:' + (active ? '#2b2620' : '#9a9080') + ';border-bottom:2px solid ' + (active ? '#a8623a' : 'transparent') + ';white-space:nowrap;';
@@ -1043,6 +1223,8 @@ class Component extends DCLogic {
       open: st.openR === i,
       chev: 'display:inline-flex;transition:transform .2s;transform:rotate(' + (st.openR === i ? 180 : 0) + 'deg);',
       toggle: () => this.setState({ openR: st.openR === i ? -1 : i }),
+      anchor: 'razg-' + (i + 1),
+      share: () => this.share((r.display || r.name) + ' — ' + (V ? V.title : ''), '#/vrijeme/' + (vi + 1) + '/razgovori/' + (i + 1)),
     }));
 
     // decorate a numbered list (guidelines + nested sub-items) with display numbers + flags
@@ -1057,7 +1239,10 @@ class Component extends DCLogic {
     const nagSections = (V ? V.nagovor : []).map(s => {
       const hasH = !!s.heading; if (hasH) hn++;
       const hasList = !!(s.numbered && s.numbered.length);
+      const k = hn;
       return { heading: s.heading, hasHeading: hasH, noHeading: !hasH, num: hasH ? num2(hn) : '', paras: s.paras,
+               anchor: hasH ? 'nag-' + k : '',
+               share: () => this.share(s.heading, '#/vrijeme/' + (vi + 1) + '/nagovor/' + k),
                summary: s.summary || '', hasSummary: hasH && !!s.summary,
                hasList: hasList, numbered: hasList ? decorateNum(s.numbered) : [] };
     });
@@ -1076,6 +1261,7 @@ class Component extends DCLogic {
         prep: f.prep.map(p => p.title).join(' · '),
         open: () => this.setState({ view: 'vrijeme', vi: i, tab: 'vjezba', openR: -1, silMinutes: f.defaultMinutes }),
         practice: () => { this.setState({ view: 'session', vi: i, tab: 'vjezba', sPhase: 'guide', gStep: 0, gElapsed: 0, gPlaying: true, block: 1, silMinutes: f.defaultMinutes }); this.ensureTimer(); this.chime(); },
+        share: () => this.share('Vježba — ' + (d ? d[i].title : 'Vrijeme ' + (i + 1)), '#/vjezba/' + (i + 1)),
       };
     });
 
@@ -1115,7 +1301,12 @@ class Component extends DCLogic {
 
     return {
       // routing
-      isHome: st.view === 'home', isVrijeme: st.view === 'vrijeme', isSession, isPrirucnik: st.view === 'prirucnik',
+      isHome: st.view === 'home', isVrijeme: st.view === 'vrijeme', isSession, isPrirucnik: st.view === 'prirucnik', isUvod: st.view === 'uvod',
+      hasUvod: !!U, uvodIntro: U ? U.intro : [], uvodIntroNotes, hasUvodIntroNotes: uvodIntroNotes.length > 0, uvodSections, uvodToTop: () => { this.setState({ sub: 0 }); jump('uvod-sadrzaj'); },
+      uvodScrollMargin: showChrome ? '64px' : '70px',
+      anchorMargin: showChrome ? '150px' : '100px',
+      shareHere: () => this.share(V ? V.title + ' — ' + V.nagovorTitle : ''),
+      hasToast: !!st.toast, toast: st.toast,
       v: V ? Object.assign({}, V, { num: num2(vi + 1) }) : { num: num2(vi + 1), title: '', nagovorTitle: '', nagovor: [], razgovori: [] },
       vKey: 'v' + vi,
       nagSections, prirucnik, smjernice, hasSmjernice,
@@ -1124,6 +1315,7 @@ class Component extends DCLogic {
       smjChevron: 'display:inline-flex;transition:transform .25s;transform:rotate(' + (st.smjOpen ? 180 : 0) + 'deg);color:#a8623a;flex-shrink:0;',
       osvrtSummary: this.osvrtSummaries[vi],
       openPrirucnik: () => this.setState({ view: 'prirucnik', drawer: false }),
+      openUvod: () => { this.setState({ view: 'uvod', drawer: false }); try { window.scrollTo(0, 0); } catch (e) {} },
 
       // app chrome
       showChrome, showBack: !chrome,

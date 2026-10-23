@@ -121,6 +121,8 @@ Niz od 10 objekata (redoslijed = redoslijed poglavlja):
   `nagovori/`). Odlomci prate knjigu; replika u razgovoru može imati više
   odlomaka odvojenih s `\n\n` (prikaz: `white-space:pre-line`).
 - `osvrt.parasAfter` (opcionalno) = tekst koji u knjizi slijedi nakon pitanja.
+- `data/uvod.json` = Uvod knjige (ekran *Uvod*); generira ga ista skripta
+  (`scripts/pdf_to_vremena.py`), vidi `CLAUDE.md`.
 - `summary` (nagovor/razgovor), naslovi u `numbered` i `osvrt` desetog vremena
   nisu iz knjige — uredničko su dodavanje.
 Vođene vježbe (koraci, tempo, trajanja, tekst tišine) NISU u JSON-u — kurirane su

@@ -16,6 +16,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument('pdf')
 ap.add_argument('--old', default='jalics/data/vremena.json')
 ap.add_argument('--out', default='jalics/data/vremena.json')
+ap.add_argument('--uvod-out', default='jalics/data/uvod.json')
 ap.add_argument('--report')
 args = ap.parse_args()
 
@@ -284,6 +285,92 @@ for i, (V, O) in enumerate(zip(vremena, old)):
 out = walk(out)
 out[0]['nagovorTitle'] = 'Što su to duhovne vježbe?'  # TOC capitalises "Duhovne"; body/lektura use lowercase
 json.dump(out, open(out_path, 'w'), ensure_ascii=False, separators=(',', ':'))
+
+# ---------- 5. Uvod (str. 17–34) -> uvod.json ----------
+SUP = str.maketrans('0123456789', '⁰¹²³⁴⁵⁶⁷⁸⁹')
+_toc = '\f'.join(pages)
+_toc = _toc[_toc.index('SADRŽAJ'):]
+_toc = _toc[:_toc.index('PRVO VRIJEME')]  # odjeljci Uvoda su u sadržaju prije PRVO VRIJEME
+toc_uvod = {int(n): t.strip() for n, t in re.findall(r'^\s*(\d+)\. (.+?)\s*(?:\. ?){3,}\s*\d+\s*$', _toc, re.M)}
+upages, inside = [], False
+for pg in pages:
+    if not inside and re.search(r'^\s*U ?VOD\s*$', pg, re.M) and 'Predgovor' not in pg:
+        inside = True
+    if inside:
+        if re.search(r'^\s{5,}PRVO VRIJEME\s*$', pg, re.M):
+            break
+        upages.append(pg)
+
+ulines, unotes = [], []  # body lines (indent, text); notes [n, text]
+for pg in upages:
+    in_note = False
+    for l in pg.split('\n'):
+        s = l.strip().replace('­', '')
+        if not s or re.fullmatch(r'U ?VOD', s):
+            continue
+        ind = len(l) - len(l.lstrip())
+        if re.fullmatch(r'\d+', s) and ind >= 3 and int(s) == len(unotes) + 1:
+            in_note = True; unotes.append([int(s), '']); continue
+        if re.fullmatch(r'\d+', s):
+            continue  # broj stranice
+        if in_note:
+            t = unotes[-1][1]
+            unotes[-1][1] = (t[:-1] + s) if t.endswith('-') and re.match(r'[a-zčćžšđ]', s) else (t + ' ' + s).strip()
+        else:
+            ulines.append((ind, s))
+
+usecs = [{'num': 0, 'heading': None, 'paras': []}]
+cur = None
+stream = []
+k = 0
+while k < len(ulines):
+    ind, s = ulines[k]
+    m = re.match(r'(\d{1,2})\. (.+)', s)
+    if m and ind >= 2 and int(m.group(1)) == usecs[-1]['num'] + 1 and toc_uvod.get(int(m.group(1)), '').startswith(m.group(2)):
+        n, head = int(m.group(1)), m.group(2)
+        while head != toc_uvod[n] and k + 1 < len(ulines) and toc_uvod[n].startswith(head + ' ' + ulines[k + 1][1]):
+            k += 1; head += ' ' + ulines[k][1]
+        flush(); usecs[-1]['paras'] = [p[1] for p in stream]; stream = []
+        usecs.append({'num': n, 'heading': head, 'paras': []})
+        k += 1; continue
+    if ind >= 2:
+        flush()
+    append(s)
+    k += 1
+flush(); usecs[-1]['paras'] = [p[1] for p in stream]
+
+# kratko nabrajanje na kraju odlomka („… tri etape: 1) put …“) u zaseban odlomak
+for sec in usecs:
+    out_p = []
+    for p in sec['paras']:
+        m = re.match(r'(.*: )(1\) .{1,60})$', p)
+        out_p += [m.group(1).strip(), m.group(2)] if m else [p]
+    sec['paras'] = out_p
+
+# oznake fusnota u tekstu -> superskript, redom 1, 2, 3 … (ne dira godine ni citate)
+nxt = 1
+for sec in usecs:
+    sec['notes'] = []
+    for pi, p in enumerate(sec['paras']):
+        while nxt <= len(unotes):
+            m = re.search(rf'(?<=[a-zčćžšđA-ZČĆŽŠĐ.)]){nxt}(?!\d)', p)
+            if not m: break
+            p = p[:m.start()] + str(nxt).translate(SUP) + p[m.end():]
+            sec['notes'].append({'n': nxt, 'text': unotes[nxt - 1][1]})
+            nxt += 1
+        sec['paras'][pi] = p
+if nxt != len(unotes) + 1:
+    R('UVOD: fusnote bez oznake u tekstu od broja', nxt)
+heads = [s['heading'] for s in usecs[1:]]
+R(f'UVOD: {len(heads)} odjeljaka, {len(unotes)} fusnota')
+for n, t in toc_uvod.items():
+    if t not in heads: R('UVOD: odjeljak nije pronađen:', n, t)
+uvod = walk({'title': 'Uvod', 'intro': usecs[0]['paras'],
+             'sections': [{k2: v for k2, v in s.items() if k2 != 'notes' or v} for s in usecs[1:]],
+             'introNotes': usecs[0]['notes']})
+if not uvod['introNotes']: del uvod['introNotes']
+json.dump(uvod, open(args.uvod_out, 'w'), ensure_ascii=False, separators=(',', ':'))
+
 if rep_path:
     open(rep_path, 'w').write('\n'.join(report) + '\n')
 print('\n'.join(report))
