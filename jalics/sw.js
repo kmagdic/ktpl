@@ -1,5 +1,5 @@
 /* Service worker — Kontemplativne duhovne vježbe (PWA offline shell) */
-const CACHE = 'kontempl-v6';
+const CACHE = 'kontempl-v7';
 const CORE = [
   './',
   './support.js',
@@ -11,7 +11,7 @@ const CORE = [
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) => Promise.allSettled(CORE.map((u) => c.add(u))))
+    caches.open(CACHE).then((c) => Promise.allSettled(CORE.map((u) => c.add(new Request(u, { cache: 'reload' })))))
   );
   self.skipWaiting();
 });
@@ -28,18 +28,34 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
-  e.respondWith(
-    caches.match(req).then((hit) => {
-      if (hit) return hit;
-      return fetch(req)
+  const url = new URL(req.url);
+  // Vlastite datoteke (stranica, podaci, skripte): prvo mreža, predmemorija samo offline —
+  // inače bi nova verzija bila vidljiva tek nakon nekoliko ponovnih učitavanja.
+  if (url.origin === location.origin) {
+    e.respondWith(
+      fetch(req, { cache: 'no-cache' })
         .then((resp) => {
-          if (resp && resp.ok && (resp.type === 'basic' || resp.type === 'cors')) {
+          if (resp && resp.ok) {
             const copy = resp.clone();
             caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
           }
           return resp;
         })
-        .catch(() => caches.match('./'));
+        .catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match('./')))
+    );
+    return;
+  }
+  // Vanjski resursi (fontovi, slike): prvo predmemorija.
+  e.respondWith(
+    caches.match(req).then((hit) => {
+      if (hit) return hit;
+      return fetch(req).then((resp) => {
+        if (resp && resp.ok && (resp.type === 'basic' || resp.type === 'cors')) {
+          const copy = resp.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+        }
+        return resp;
+      });
     })
   );
 });

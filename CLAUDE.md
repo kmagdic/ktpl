@@ -28,7 +28,9 @@ Ključno:
   podići `CACHE` u `jalics/sw.js` (npr. `kontempl-v6` → `kontempl-v7`), inače
   instalirana PWA i dalje servira staru verziju iz predmemorije. Istodobno
   ažurirati `appVersion` u `index.html` (isti broj + datum) — prikazuje se
-  na dnu početnog zaslona („Verzija 6 · 23. 10. 2026.“).
+  na dnu početnog zaslona („Verzija 7 · 23. 10. 2026.“). Service worker je *network-first* za
+  vlastite datoteke (offline pada na predmemoriju), pa korisnici novu verziju
+  dobiju već pri sljedećem učitavanju.
 
 ### Sadržaj knjige → `vremena.json`
 Izvor teksta je **lektorirano izdanje** knjige (Zaklada biskup Josip Lang,
