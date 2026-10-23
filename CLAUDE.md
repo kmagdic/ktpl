@@ -25,9 +25,9 @@ Ključno:
   service worker rade **samo preko HTTPS-a** (ili `localhost`).
 
 - Nakon **svake promjene** `index.html`, `support.js` ili `data/vremena.json`
-  podići verziju za 0.1 (2.2 → 2.3) na **dva mjesta**: `appVersion` u
+  podići verziju za 0.1 (2.3 → 2.4) na **dva mjesta**: `appVersion` u
   `index.html` (broj + datum, prikazuje se na dnu početnog zaslona:
-  „Verzija 2.2 · 23. 10. 2026.“) i `CACHE` u `jalics/sw.js` (`kontempl-2.2`).
+  „Verzija 2.3 · 23. 10. 2026.“) i `CACHE` u `jalics/sw.js` (`kontempl-2.3`).
   Promjena `CACHE` briše staru predmemoriju. Service worker je *network-first* za
   vlastite datoteke (offline pada na predmemoriju), pa korisnici novu verziju
   dobiju već pri sljedećem učitavanju.
@@ -47,12 +47,26 @@ Svaki ekran ima adresu u `#` dijelu URL-a (npr.
 `https://kmagdic.github.io/ktpl/jalics/#/uvod/8`):
 `#/uvod[/N]`, `#/prirucnik`, `#/vrijeme/N[/nagovor|vjezba|razgovori|osvrt]`,
 `#/vrijeme/N/nagovor/K` (odjeljak nagovora), `#/vrijeme/N/razgovori/K`
-(otvoren razgovor), `#/vjezba/N` (= vježba vremena N). Logika je u
+(otvoren razgovor), `#/vjezba/N` (= vježba vremena N), `#/oznake`. Logika je u
 `routeHash`/`applyHash`/`syncHash` u `index.html`: adresa se ažurira dok se
 korisnik kreće (novi ekran = novi unos u povijesti, pa radi Natrag), a pri
 otvaranju se skače na sidro (`uvod-N`, `nag-K`, `razg-K`). Gumbi s ikonom
 lanca dijele poveznicu (mobitel: sustavni izbornik za dijeljenje; računalo:
 kopira u međuspremnik). `#app` je rezerviran za testiranje standalone načina.
+
+### Oznake teksta (highlight)
+Korisnik odabere dio teksta → plutajući gumb *Označi* (dodir na oznaku →
+*Ukloni oznaku*); odabir se proširuje na cijele riječi, može preko više
+odlomaka. Spremanje: `localStorage.jalics_highlights` =
+`{ [id]: [[od, do, "isječak"], …] }`. ID odlomka: nagovor `v2.n4.p0`
+(vrijeme 0-indeks, odjeljak, odlomak), smjernice `v9.n1.l2[.s3]`, razgovor
+`v2.r1.t0` (replika), osvrt `v2.o.p0|q0|a0`, Uvod `u.i0` / `u.s8.p3`.
+Odlomak u DOM-u ima `id="hl-<id>"`, označeni dio `class="hl-mark"` (**DC
+predložak ne propušta `data-*` atribute** na običnim elementima — koristiti
+`id`/`class`). Ako se tekst promijeni (nova lektura → novi indeksi ili riječi),
+oznaka se traži po isječku; ako ga nema, ne prikazuje se u tekstu, a u
+„Moje oznake“ (`#/oznake`) piše da se tekst promijenio. Zato pri novom uvozu
+teksta ne mijenjati redoslijed odlomaka bez potrebe.
 
 ### Sadržaj knjige → `vremena.json`
 Izvor teksta je **lektorirano izdanje** knjige (Zaklada biskup Josip Lang,

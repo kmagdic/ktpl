@@ -116,7 +116,7 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Priručnik — sve vježbe na jednom mjestu
     </button>
     <sc-if value="{{ hasUvod }}" hint-placeholder-val="{{ true }}">
-      <div style="text-align:center;margin-top:12px;"><button onClick="{{ openUvod }}" style="background:none;border:none;cursor:pointer;color:#8a7f6d;font-family:'Spectral',serif;font-size:14px;padding:4px 8px;text-decoration:underline;text-decoration-color:rgba(138,127,109,0.4);text-underline-offset:3px;" style-hover="color:#8a4e2d;">Uvod u knjigu</button></div>
+      <div style="text-align:center;margin-top:12px;"><button onClick="{{ openUvod }}" style="background:none;border:none;cursor:pointer;color:#8a7f6d;font-family:'Spectral',serif;font-size:14px;padding:4px 8px;text-decoration:underline;text-decoration-color:rgba(138,127,109,0.4);text-underline-offset:3px;" style-hover="color:#8a4e2d;">Uvod u knjigu</button><sc-if value="{{ hasHl }}" hint-placeholder-val="{{ false }}"><span style="color:#c9bfae;margin:0 4px;">·</span><button onClick="{{ openOznake }}" style="background:none;border:none;cursor:pointer;color:#8a7f6d;font-family:'Spectral',serif;font-size:14px;padding:4px 8px;text-decoration:underline;text-decoration-color:rgba(138,127,109,0.4);text-underline-offset:3px;" style-hover="color:#8a4e2d;">Moje oznake</button></sc-if></div>
     </sc-if>
 
     <sc-if value="{{ showInstall }}" hint-placeholder-val="{{ true }}">
@@ -207,7 +207,7 @@
               </sc-if>
             </sc-if>
             <sc-for list="{{ s.paras }}" as="p" hint-placeholder-count="2">
-              <p style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;">{{ p }}</p>
+              <p id="{{ p.hid }}" style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;"><sc-for list="{{ p.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
             </sc-for>
             <sc-if value="{{ s.hasList }}" hint-placeholder-val="{{ false }}">
               <ol style="list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:22px;">
@@ -216,14 +216,14 @@
                     <span style="width:32px;height:32px;border-radius:50%;background:#a8623a;color:#fbf7ee;display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;line-height:1;flex-shrink:0;box-shadow:0 4px 12px -6px rgba(168,98,58,0.8);">{{ n.num }}</span>
                     <div style="flex:1;padding-top:3px;">
                       <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;color:#8a4e2d;line-height:1.18;margin:0 0 5px;">{{ n.title }}</div>
-                      <p style="margin:0;font-size:17px;line-height:1.74;color:#3f3930;text-wrap:pretty;">{{ n.text }}</p>
+                      <p id="{{ n.tx.hid }}" style="margin:0;font-size:17px;line-height:1.74;color:#3f3930;text-wrap:pretty;"><sc-for list="{{ n.tx.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
                       <sc-if value="{{ n.hasSub }}" hint-placeholder-val="{{ false }}">
                         <ol style="list-style:none;margin:14px 0 4px;padding:0 0 0 18px;border-left:2px solid rgba(168,98,58,0.28);display:flex;flex-direction:column;gap:13px;">
                           <sc-for list="{{ n.sub }}" as="su" hint-placeholder-count="5">
                             <li style="display:flex;gap:12px;align-items:flex-start;">
                               <span style="width:25px;height:25px;border-radius:50%;border:1.5px solid #a8623a;background:rgba(168,98,58,0.07);color:#a8623a;display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;line-height:1;flex-shrink:0;">{{ su.num }}</span>
                               <div style="flex:1;padding-top:1px;">
-                                <span style="font-weight:600;font-size:16px;color:#8a4e2d;">{{ su.title }}. </span><span style="font-size:15.5px;line-height:1.7;color:#4f483d;">{{ su.text }}</span>
+                                <span style="font-weight:600;font-size:16px;color:#8a4e2d;">{{ su.title }}. </span><span id="{{ su.tx.hid }}" style="font-size:15.5px;line-height:1.7;color:#4f483d;"><sc-for list="{{ su.tx.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></span>
                               </div>
                             </li>
                           </sc-for>
@@ -304,7 +304,7 @@
                     <sc-for list="{{ r.turns }}" as="t" hint-placeholder-count="3">
                       <div style="margin-top:13px;">
                         <div style="font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#a8623a;margin-bottom:2px;">{{ t.speaker }}</div>
-                        <div style="font-size:16.5px;line-height:1.68;color:#3f3930;white-space:pre-line;">{{ t.text }}</div>
+                        <div id="{{ t.tx.hid }}" style="font-size:16.5px;line-height:1.68;color:#3f3930;white-space:pre-line;"><sc-for list="{{ t.tx.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></div>
                       </div>
                     </sc-for>
                     <div style="text-align:right;margin-top:14px;"><button onClick="{{ r.share }}" style="background:none;border:none;cursor:pointer;color:#a59a86;font-family:'Spectral',serif;font-size:12.5px;padding:2px 0;display:inline-flex;align-items:center;gap:6px;" style-hover="color:#8a4e2d;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Podijeli razgovor</button></div>
@@ -324,7 +324,7 @@
             <div style="font-size:14px;line-height:1.55;font-style:italic;">{{ osvrtSummary }}</div>
           </div>
           <sc-for list="{{ osvrtParas }}" as="p" hint-placeholder-count="2">
-            <p style="font-size:18px;line-height:1.76;color:#3f3930;margin:0 0 15px;text-wrap:pretty;">{{ p }}</p>
+            <p id="{{ p.hid }}" style="font-size:18px;line-height:1.76;color:#3f3930;margin:0 0 15px;text-wrap:pretty;"><sc-for list="{{ p.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
           </sc-for>
 
           <sc-if value="{{ hasQuestions }}" hint-placeholder-val="{{ false }}">
@@ -334,14 +334,14 @@
                 <sc-for list="{{ osvrtQuestions }}" as="q" hint-placeholder-count="4">
                   <div style="display:flex;gap:14px;align-items:flex-start;background:#fbf7ee;border:1px solid rgba(43,38,32,0.1);border-radius:4px;padding:16px 18px;">
                     <div style="flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:#a8623a;margin-top:11px;"></div>
-                    <div style="font-size:17px;line-height:1.6;color:#3f3930;">{{ q }}</div>
+                    <div id="{{ q.hid }}" style="font-size:17px;line-height:1.6;color:#3f3930;"><sc-for list="{{ q.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></div>
                   </div>
                 </sc-for>
               </div>
             </div>
           </sc-if>
           <sc-for list="{{ osvrtParasAfter }}" as="p" hint-placeholder-count="0">
-            <p style="font-size:18px;line-height:1.76;color:#3f3930;margin:26px 0 15px;text-wrap:pretty;">{{ p }}</p>
+            <p id="{{ p.hid }}" style="font-size:18px;line-height:1.76;color:#3f3930;margin:26px 0 15px;text-wrap:pretty;"><sc-for list="{{ p.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
           </sc-for>
 
           <div style="margin-top:34px;">
@@ -399,13 +399,13 @@
             <span style="width:30px;height:30px;border-radius:50%;background:#a8623a;color:#fbf7ee;display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;line-height:1;flex-shrink:0;box-shadow:0 4px 12px -6px rgba(168,98,58,0.8);">{{ n.num }}</span>
             <div style="flex:1;padding-top:2px;">
               <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;color:#8a4e2d;line-height:1.18;margin:0 0 4px;">{{ n.title }}</div>
-              <p style="margin:0;font-size:16px;line-height:1.7;color:#3f3930;text-wrap:pretty;">{{ n.text }}</p>
+              <p id="{{ n.tx.hid }}" style="margin:0;font-size:16px;line-height:1.7;color:#3f3930;text-wrap:pretty;"><sc-for list="{{ n.tx.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
               <sc-if value="{{ n.hasSub }}" hint-placeholder-val="{{ false }}">
                 <ol style="list-style:none;margin:12px 0 2px;padding:0 0 0 16px;border-left:2px solid rgba(168,98,58,0.28);display:flex;flex-direction:column;gap:11px;">
                   <sc-for list="{{ n.sub }}" as="su" hint-placeholder-count="5">
                     <li style="display:flex;gap:11px;align-items:flex-start;">
                       <span style="width:23px;height:23px;border-radius:50%;border:1.5px solid #a8623a;background:rgba(168,98,58,0.07);color:#a8623a;display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:600;line-height:1;flex-shrink:0;">{{ su.num }}</span>
-                      <div style="flex:1;padding-top:1px;"><span style="font-weight:600;font-size:15.5px;color:#8a4e2d;">{{ su.title }}. </span><span style="font-size:15px;line-height:1.68;color:#4f483d;">{{ su.text }}</span></div>
+                      <div style="flex:1;padding-top:1px;"><span style="font-weight:600;font-size:15.5px;color:#8a4e2d;">{{ su.title }}. </span><span id="{{ su.tx.hid }}" style="font-size:15px;line-height:1.68;color:#4f483d;"><sc-for list="{{ su.tx.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></span></div>
                     </li>
                   </sc-for>
                 </ol>
@@ -465,7 +465,7 @@
       </sc-for>
     </nav>
     <sc-for list="{{ uvodIntro }}" as="p" hint-placeholder-count="2">
-      <p style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;">{{ p }}</p>
+      <p id="{{ p.hid }}" style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;"><sc-for list="{{ p.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
     </sc-for>
     <sc-if value="{{ hasUvodIntroNotes }}" hint-placeholder-val="{{ false }}">
       <div style="margin-top:6px;padding-top:10px;border-top:1px solid rgba(43,38,32,0.1);display:flex;flex-direction:column;gap:6px;">
@@ -482,7 +482,7 @@
           <button onClick="{{ s.share }}" aria-label="Podijeli poveznicu na odjeljak" title="Podijeli poveznicu na odjeljak" style="background:none;border:none;cursor:pointer;color:#b9ae9a;padding:4px;display:inline-flex;align-self:center;flex-shrink:0;" style-hover="color:#8a4e2d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
         </div>
         <sc-for list="{{ s.paras }}" as="p" hint-placeholder-count="2">
-          <p style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;">{{ p }}</p>
+          <p id="{{ p.hid }}" style="margin:0 0 15px;font-size:18px;line-height:1.78;color:#3f3930;text-wrap:pretty;"><sc-for list="{{ p.segs }}" as="g"><span style="{{ g.style }}" class="{{ g.cls }}">{{ g.t }}</span></sc-for></p>
         </sc-for>
         <sc-if value="{{ s.hasNotes }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top:6px;padding-top:10px;border-top:1px solid rgba(43,38,32,0.1);display:flex;flex-direction:column;gap:6px;">
@@ -492,6 +492,42 @@
           </div>
         </sc-if>
         <div style="text-align:right;margin-top:8px;"><button onClick="{{ uvodToTop }}" style="background:none;border:none;cursor:pointer;color:#a59a86;font-family:'Spectral',serif;font-size:12.5px;padding:2px 0;" style-hover="color:#8a4e2d;">↑ Sadržaj uvoda</button></div>
+      </div>
+    </sc-for>
+  </div>
+  </sc-if>
+
+  <!-- ============ MOJE OZNAKE ============ -->
+  <sc-if value="{{ isOznake }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:760px;margin:0 auto;padding:0 28px 110px;">
+    <sc-if value="{{ showBack }}" hint-placeholder-val="{{ true }}">
+    <div style="position:sticky;top:0;z-index:5;background:rgba(239,232,218,0.94);backdrop-filter:blur(8px);margin:0 -28px;padding:14px 28px;border-bottom:1px solid rgba(43,38,32,0.1);">
+      <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;color:#7a7161;display:inline-flex;align-items:center;gap:6px;font-size:14px;padding:4px 0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Sadržaj</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ false }}"><div style="height:44px;"></div></sc-if>
+    <div style="text-align:center;padding:42px 0 22px;">
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,6vw,48px);line-height:1.05;margin:0 0 10px;">Moje oznake</h1>
+      <p style="margin:0;color:#8a7f6d;font-size:14px;">Označi tekst (odaberi ga prstom ili mišem) pa dodirni <em>Označi</em>. Oznake ostaju samo na ovom uređaju.</p>
+    </div>
+    <sc-if value="{{ noHl }}" hint-placeholder-val="{{ false }}">
+      <p style="text-align:center;color:#a59a86;font-style:italic;margin-top:30px;">Još nemaš oznaka.</p>
+    </sc-if>
+    <sc-for list="{{ hlGroups }}" as="gr" hint-placeholder-count="2">
+      <div style="margin-top:28px;">
+        <div style="letter-spacing:0.22em;text-transform:uppercase;font-size:11px;color:#a8623a;margin-bottom:10px;">{{ gr.title }}</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ gr.items }}" as="it" hint-placeholder-count="2">
+            <div style="display:flex;gap:10px;align-items:flex-start;background:#fbf7ee;border:1px solid rgba(43,38,32,0.1);border-radius:6px;padding:14px 12px 14px 16px;">
+              <button onClick="{{ it.open }}" style="flex:1;min-width:0;text-align:left;background:none;border:none;cursor:pointer;padding:0;font-family:'Spectral',serif;">
+                <span style="display:block;font-size:12.5px;color:#8a7f6d;margin-bottom:5px;">{{ it.where }}</span>
+                <span style="display:block;font-size:16.5px;line-height:1.6;color:#3f3930;"><span style="background:rgba(232,184,96,0.38);border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:0 1px;">{{ it.text }}</span></span>
+                <sc-if value="{{ it.stale }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:12px;color:#b07a5a;margin-top:5px;">Tekst se u međuvremenu promijenio — oznaka se više ne vidi u tekstu.</span></sc-if>
+              </button>
+              <button onClick="{{ it.remove }}" aria-label="Ukloni oznaku" title="Ukloni oznaku" style="background:none;border:none;cursor:pointer;color:#b9ae9a;padding:4px;display:flex;flex-shrink:0;" style-hover="color:#8a4e2d;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+            </div>
+          </sc-for>
+        </div>
       </div>
     </sc-for>
   </div>
@@ -618,6 +654,12 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{ hasHlUi }}" hint-placeholder-val="{{ false }}">
+    <div id="hl-ui" class="{{ chromeClass }}" style="{{ hlUiStyle }}">
+      <button onClick="{{ hlAction }}" style="background:#2b2620;color:#f4ecdc;border:none;border-radius:999px;padding:9px 16px;font-family:'Spectral',serif;font-size:14.5px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 10px 26px -10px rgba(0,0,0,0.55);"><span style="width:12px;height:12px;border-radius:3px;background:rgba(232,184,96,0.9);display:inline-block;"></span>{{ hlLabel }}</button>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
     <div class="{{ chromeClass }}" style="position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;max-width:calc(100vw - 32px);background:#2b2620;color:#f4ecdc;border-radius:999px;padding:10px 18px;font-size:14px;box-shadow:0 10px 30px -12px rgba(0,0,0,0.5);animation:softIn .2s ease both;overflow-wrap:anywhere;text-align:center;">{{ toast }}</div>
   </sc-if>
@@ -636,6 +678,7 @@
         <sc-if value="{{ hasUvod }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ openUvod }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:11px 20px;font-family:'Spectral',serif;font-size:15px;color:#7a7161;display:flex;align-items:center;gap:12px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#a59a86" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Uvod u knjigu</button>
         </sc-if>
+        <button onClick="{{ openOznake }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:11px 20px;font-family:'Spectral',serif;font-size:15px;color:#7a7161;display:flex;align-items:center;gap:12px;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#a59a86" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>Moje oznake</button>
         <div style="letter-spacing:0.2em;text-transform:uppercase;font-size:10.5px;color:#a59a86;padding:16px 20px 6px;">Vremena</div>
         <sc-for list="{{ cards }}" as="c" hint-placeholder-count="0">
           <button onClick="{{ c.open }}" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:11px 20px;font-family:'Spectral',serif;font-size:15.5px;color:#3f3930;display:flex;align-items:center;gap:12px;">
@@ -654,6 +697,7 @@ class Component extends DCLogic {
     view: 'home', vi: 0, tab: 'nagovor',
     data: null, loaded: false, uvod: null,
     sub: 0, subKey: '', toast: '',
+    hl: {}, hlUi: null,
     openR: -1,
     // session
     sPhase: null, gStep: 0, gElapsed: 0, gPlaying: true,
@@ -703,7 +747,7 @@ class Component extends DCLogic {
   ];
 
   // pri svakom izdanju +0.1 (1.9 → 2.0); isti broj u CACHE u sw.js (kontempl-1.9)
-  appVersion = '2.2 · 23. 10. 2026.';
+  appVersion = '2.3 · 23. 10. 2026.';
   heroImg = 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1900&q=74';
   imgs = [
     'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1500&q=74',
@@ -972,6 +1016,12 @@ class Component extends DCLogic {
       .then(r => r.json())
       .then(u => this.setState({ uvod: u }))
       .catch(() => {});
+    // oznake teksta
+    try {
+      this.setState({ hl: JSON.parse(localStorage.getItem('jalics_highlights') || '{}') || {} });
+      document.addEventListener('selectionchange', () => { clearTimeout(this._selT); this._selT = setTimeout(() => this.onSelChange(), 250); });
+      document.addEventListener('click', (e) => this.onHlTap(e));
+    } catch (e) {}
     // poveznice: otvori ekran iz adrese; Natrag/Naprijed u pregledniku
     try {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -1009,6 +1059,7 @@ class Component extends DCLogic {
     const sub = st.subKey === this.subKeyOf(st) ? st.sub : 0;
     if (st.view === 'uvod') return '#/uvod' + (sub ? '/' + sub : '');
     if (st.view === 'prirucnik') return '#/prirucnik';
+    if (st.view === 'oznake') return '#/oznake';
     if (st.view === 'vrijeme' || st.view === 'session') {
       const tab = st.view === 'session' ? 'vjezba' : st.tab;
       let h = '#/vrijeme/' + (st.vi + 1);
@@ -1020,18 +1071,20 @@ class Component extends DCLogic {
     return '';
   }
   parseHash(hash) {
-    const m = (hash || '').match(/^#\/(uvod|prirucnik|vrijeme|vjezba)(?:\/(\d+))?(?:\/(nagovor|vjezba|razgovori|osvrt))?(?:\/(\d+))?\/?$/);
+    const m = (hash || '').match(/^#\/(uvod|prirucnik|oznake|vrijeme|vjezba)(?:\/(\d+))?(?:\/(nagovor|vjezba|razgovori|osvrt))?(?:\/(\d+))?\/?$/);
     return m ? { page: m[1], a: +m[2] || 0, tab: m[3], k: +m[4] || 0 } : null;
   }
-  applyHash(hash) {
+  // fromUrl: ruta je došla iz adrese (otvaranje, Natrag) — adresu tada ne treba ponovno upisivati
+  applyHash(hash, fromUrl = true) {
     const r = this.parseHash(hash);
     if (!r) { if (!hash && this.state.view !== 'session') this.setState({ view: 'home', drawer: false }); return; }
-    this._hash = hash;
+    if (fromUrl) this._hash = hash;
     if (r.page === 'uvod') {
       this.setState({ view: 'uvod', drawer: false, sub: r.a, subKey: this.subKeyOf(Object.assign({}, this.state, { view: 'uvod' })) });
       return this.scrollToId(r.a ? 'uvod-' + r.a : null);
     }
     if (r.page === 'prirucnik') { this.setState({ view: 'prirucnik', drawer: false }); return this.scrollToId(null); }
+    if (r.page === 'oznake') { this.setState({ view: 'oznake', drawer: false }); return this.scrollToId(null); }
     if (this.state.view === 'session') this.stopTimer();
     const vi = Math.min(9, Math.max(0, (r.a || 1) - 1));
     const tab = r.page === 'vjezba' ? 'vjezba' : (r.tab || 'nagovor');
@@ -1070,6 +1123,120 @@ class Component extends DCLogic {
       if (page !== this._page) history.pushState(null, '', url); else history.replaceState(null, '', url);
     } catch (e) {}
     this._page = page;
+  }
+  // ---- Oznake teksta: localStorage.jalics_highlights = { [id odlomka]: [[od, do, "isječak"], …] } ----
+  saveHl(hl) {
+    this.setState({ hl });
+    try { localStorage.setItem('jalics_highlights', JSON.stringify(hl)); } catch (e) {}
+  }
+  // spremljeni rasponi za odlomak; ako se tekst promijenio, traži isječak, inače preskoči
+  hlRanges(id, text) {
+    const raw = (this.state.hl || {})[id] || [];
+    const out = [];
+    raw.forEach(([a, b, snip]) => {
+      if (text.slice(a, b) === snip) out.push([a, b]);
+      else if (snip) { const i = text.indexOf(snip); if (i >= 0) out.push([i, i + snip.length]); }
+    });
+    out.sort((x, y) => x[0] - y[0]);
+    const merged = [];
+    out.forEach(r => { const l = merged[merged.length - 1]; if (l && r[0] <= l[1]) l[1] = Math.max(l[1], r[1]); else merged.push(r.slice()); });
+    return merged;
+  }
+  // (DC predložak ne propušta data-* atribute: odlomak ima id="hl-<id>", označeni dio class="hl-mark")
+  hlHost(node) { const el = node && (node.nodeType === 1 ? node : node.parentElement); return el && el.closest ? el.closest('[id^="hl-"]') : null; }
+  hlOffset(host, node, off) { const r = document.createRange(); r.setStart(host, 0); r.setEnd(node, off); return r.toString().length; }
+  // trenutni odabir → dijelovi po odlomcima [{id, s, e, text}]
+  hlFromSelection() {
+    const sel = window.getSelection && window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) return null;
+    const r = sel.getRangeAt(0);
+    const parts = [...document.querySelectorAll('[id^="hl-"]')].filter(el => el.id !== 'hl-ui' && r.intersectsNode(el)).map(el => {
+      const text = el.textContent;
+      let s = el.contains(r.startContainer) ? this.hlOffset(el, r.startContainer, r.startOffset) : 0;
+      let e = el.contains(r.endContainer) ? this.hlOffset(el, r.endContainer, r.endOffset) : text.length;
+      while (s < e && /\s/.test(text[s])) s++;
+      while (e > s && /\s/.test(text[e - 1])) e--;
+      // proširi na cijele riječi
+      while (s > 0 && /[\p{L}\p{N}]/u.test(text[s - 1]) && /[\p{L}\p{N}]/u.test(text[s])) s--;
+      while (e < text.length && /[\p{L}\p{N}]/u.test(text[e]) && /[\p{L}\p{N}]/u.test(text[e - 1])) e++;
+      return { id: el.id.slice(3), s, e, text };
+    }).filter(x => x.id && x.e > x.s);
+    return parts.length ? { parts, rect: r.getBoundingClientRect() } : null;
+  }
+  hlPos(rect) {
+    const w = window.innerWidth, h = window.innerHeight;
+    const x = Math.min(w - 80, Math.max(80, rect.left + rect.width / 2));
+    const below = rect.bottom + 14;
+    const y = below < h - 70 ? below : Math.max(60, rect.top - 56);
+    return { x, y };
+  }
+  onSelChange() {
+    const sel = this.hlFromSelection();
+    if (sel) { const p = this.hlPos(sel.rect); this.setState({ hlUi: { mode: 'add', parts: sel.parts, x: p.x, y: p.y } }); }
+    else if (this.state.hlUi && this.state.hlUi.mode === 'add') this.setState({ hlUi: null });
+  }
+  onHlTap(e) {
+    if (e.target.closest && e.target.closest('#hl-ui')) return;
+    const sel = window.getSelection && window.getSelection();
+    if (sel && !sel.isCollapsed) return;
+    const mark = e.target.closest && e.target.closest('.hl-mark');
+    const host = mark && this.hlHost(mark);
+    if (!host) { if (this.state.hlUi) this.setState({ hlUi: null }); return; }
+    const id = host.id.slice(3);
+    const s = this.hlOffset(host, mark, 0), len = mark.textContent.length;
+    const p = this.hlPos(mark.getBoundingClientRect());
+    this.setState({ hlUi: { mode: 'remove', id, s, e: s + len, x: p.x, y: p.y } });
+  }
+  hlApply() {
+    const ui = this.state.hlUi; if (!ui) return;
+    const hl = Object.assign({}, this.state.hl);
+    if (ui.mode === 'add') {
+      ui.parts.forEach(({ id, s, e, text }) => {
+        const ranges = this.hlRanges(id, text).concat([[s, e]]).sort((x, y) => x[0] - y[0]);
+        const merged = [];
+        ranges.forEach(r => { const l = merged[merged.length - 1]; if (l && r[0] <= l[1]) l[1] = Math.max(l[1], r[1]); else merged.push(r.slice()); });
+        hl[id] = merged.map(([a, b]) => [a, b, text.slice(a, b)]);
+      });
+      try { window.getSelection().removeAllRanges(); } catch (e) {}
+    } else {
+      const host = document.getElementById('hl-' + ui.id);
+      const text = host ? host.textContent : '';
+      hl[ui.id] = this.hlRanges(ui.id, text).filter(([a, b]) => b <= ui.s || a >= ui.e).map(([a, b]) => [a, b, text.slice(a, b)]);
+      if (!hl[ui.id].length) delete hl[ui.id];
+    }
+    this.setState({ hlUi: null });
+    this.saveHl(hl);
+  }
+  // tekst odlomka iz podataka prema id-u (za popis „Moje oznake“)
+  hlLocate(id) {
+    const d = this.state.data || [], U = this.state.uvod;
+    let m;
+    if ((m = id.match(/^u\.i(\d+)$/)) && U) return { group: 'Uvod', order: 0, where: 'Uvod', text: U.intro[+m[1]], hash: '#/uvod' };
+    if ((m = id.match(/^u\.s(\d+)\.p(\d+)$/)) && U) {
+      const sec = U.sections.find(x => x.num === +m[1]) || { paras: [] };
+      return { group: 'Uvod', order: 0, where: 'Uvod · ' + sec.heading, text: sec.paras[+m[2]], hash: '#/uvod/' + m[1] };
+    }
+    if (!(m = id.match(/^v(\d+)\.(.+)$/)) || !d[+m[1]]) return null;
+    const vi = +m[1], V = d[vi], rest = m[2], base = '#/vrijeme/' + (vi + 1);
+    const group = V.title + ' · ' + V.nagovorTitle, order = vi + 1;
+    let r;
+    if ((r = rest.match(/^n(\d+)\.(p(\d+)|l(\d+)(?:\.s(\d+))?)$/))) {
+      const si = +r[1], sec = V.nagovor[si] || {};
+      const k = V.nagovor.slice(0, si + 1).filter(x => x.heading).length;
+      let text;
+      if (r[3] !== undefined) text = (sec.paras || [])[+r[3]];
+      else { const it = (sec.numbered || [])[+r[4]] || {}; text = r[5] !== undefined ? ((it.sub || [])[+r[5]] || {}).text : it.text; }
+      return { group, order, where: 'Nagovor · ' + (sec.heading || ''), text, hash: base + '/nagovor/' + k };
+    }
+    if ((r = rest.match(/^r(\d+)\.t(\d+)$/))) {
+      const rz = V.razgovori[+r[1]] || { turns: [] }, t = rz.turns[+r[2]] || {};
+      return { group, order, where: 'Razgovor · ' + (rz.display || rz.name || ''), text: t.text, hash: base + '/razgovori/' + (+r[1] + 1) };
+    }
+    if ((r = rest.match(/^o\.([pqa])(\d+)$/))) {
+      const o = V.osvrt, list = r[1] === 'p' ? o.paras : r[1] === 'q' ? o.questions : (o.parasAfter || []);
+      return { group, order, where: 'Osvrt', text: list[+r[2]], hash: base + '/osvrt' };
+    }
+    return null;
   }
   setSub(n, id) {
     this.setState({ sub: n, subKey: this.subKeyOf(this.state) });
@@ -1192,10 +1359,22 @@ class Component extends DCLogic {
     const num2 = (n) => (n < 10 ? '0' : '') + n;
     const sup = (n) => String(n).replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
     const U = st.uvod;
+    // označivi tekst: { id, segs: [{t, style, mark}] }
+    const HLS = 'background:rgba(232,184,96,0.38);border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone;cursor:pointer;';
+    const tx = (id, text) => {
+      text = text || '';
+      const rs = this.hlRanges(id, text);
+      if (!rs.length) return { id, hid: 'hl-' + id, segs: [{ t: text, style: '', cls: '' }] };
+      const segs = []; let pos = 0;
+      rs.forEach(([a, b]) => { if (a > pos) segs.push({ t: text.slice(pos, a), style: '', cls: '' }); segs.push({ t: text.slice(a, b), style: HLS, cls: 'hl-mark' }); pos = b; });
+      if (pos < text.length) segs.push({ t: text.slice(pos), style: '', cls: '' });
+      return { id, hid: 'hl-' + id, segs };
+    };
     const noteList = (ns) => (ns || []).map(n => ({ mark: sup(n.n), text: n.text }));
     const uvodIntroNotes = U ? noteList(U.introNotes) : [];
     const jump = (id) => { try { document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {} };
-    const uvodSections = U ? U.sections.map(s => ({ num: num2(s.num), heading: s.heading, paras: s.paras,
+    const uvodSections = U ? U.sections.map(s => ({ num: num2(s.num), heading: s.heading,
+      paras: s.paras.map((p, j) => tx('u.s' + s.num + '.p' + j, p)),
       anchor: 'uvod-' + s.num,
       go: () => { this.setState({ sub: s.num, subKey: this.subKeyOf(st) }); jump('uvod-' + s.num); },
       share: () => this.share(s.heading + ' — Uvod', '#/uvod/' + s.num),
@@ -1218,7 +1397,8 @@ class Component extends DCLogic {
 
     // razgovori list
     const razgovori = (V ? V.razgovori : []).map((r, i) => ({
-      name: r.name, display: r.display || r.name, summary: r.summary || '', n: num2(i + 1), turns: r.turns,
+      name: r.name, display: r.display || r.name, summary: r.summary || '', n: num2(i + 1),
+      turns: r.turns.map((t, j) => ({ speaker: t.speaker, tx: tx('v' + vi + '.r' + i + '.t' + j, t.text) })),
       hasSummary: !!(r.summary),
       open: st.openR === i,
       chev: 'display:inline-flex;transition:transform .2s;transform:rotate(' + (st.openR === i ? 180 : 0) + 'deg);',
@@ -1228,28 +1408,29 @@ class Component extends DCLogic {
     }));
 
     // decorate a numbered list (guidelines + nested sub-items) with display numbers + flags
-    const decorateNum = (arr) => (arr || []).map((n, i) => ({
-      num: String(i + 1), title: n.title || '', text: n.text || '',
+    const decorateNum = (arr, pre) => (arr || []).map((n, i) => ({
+      num: String(i + 1), title: n.title || '', tx: tx(pre + '.l' + i, n.text),
       hasSub: !!(n.sub && n.sub.length), noSub: !(n.sub && n.sub.length),
-      sub: (n.sub || []).map((su, j) => ({ num: String(j + 1), title: su.title || '', text: su.text || '' })),
+      sub: (n.sub || []).map((su, j) => ({ num: String(j + 1), title: su.title || '', tx: tx(pre + '.l' + i + '.s' + j, su.text) })),
     }));
 
     // nagovor sections with running heading numbers
     let hn = 0;
-    const nagSections = (V ? V.nagovor : []).map(s => {
+    const nagSections = (V ? V.nagovor : []).map((s, si) => {
       const hasH = !!s.heading; if (hasH) hn++;
       const hasList = !!(s.numbered && s.numbered.length);
       const k = hn;
-      return { heading: s.heading, hasHeading: hasH, noHeading: !hasH, num: hasH ? num2(hn) : '', paras: s.paras,
+      return { heading: s.heading, hasHeading: hasH, noHeading: !hasH, num: hasH ? num2(hn) : '',
+               paras: s.paras.map((p, j) => tx('v' + vi + '.n' + si + '.p' + j, p)),
                anchor: hasH ? 'nag-' + k : '',
                share: () => this.share(s.heading, '#/vrijeme/' + (vi + 1) + '/nagovor/' + k),
                summary: s.summary || '', hasSummary: hasH && !!s.summary,
-               hasList: hasList, numbered: hasList ? decorateNum(s.numbered) : [] };
+               hasList: hasList, numbered: hasList ? decorateNum(s.numbered, 'v' + vi + '.n' + si) : [] };
     });
 
     // "Praktične smjernice" (iz desetog vremena) — istaknuto u Priručniku
-    const smjerniceSrc = (d && d[9] && d[9].nagovor) ? (d[9].nagovor.find(s => s.numbered && s.numbered.length) || {}).numbered : null;
-    const smjernice = decorateNum(smjerniceSrc);
+    const smjIdx = (d && d[9] && d[9].nagovor) ? d[9].nagovor.findIndex(s => s.numbered && s.numbered.length) : -1;
+    const smjernice = smjIdx >= 0 ? decorateNum(d[9].nagovor[smjIdx].numbered, 'v9.n' + smjIdx) : [];
     const hasSmjernice = smjernice.length > 0;
 
     // priručnik (svi termini)
@@ -1265,9 +1446,28 @@ class Component extends DCLogic {
       };
     });
 
-    const osvrtParas = V ? V.osvrt.paras : [];
-    const osvrtQuestions = V ? V.osvrt.questions : [];
-    const osvrtParasAfter = (V && V.osvrt.parasAfter) || [];
+    const osvrtParas = (V ? V.osvrt.paras : []).map((p, j) => tx('v' + vi + '.o.p' + j, p));
+    const osvrtQuestions = (V ? V.osvrt.questions : []).map((p, j) => tx('v' + vi + '.o.q' + j, p));
+    const osvrtParasAfter = ((V && V.osvrt.parasAfter) || []).map((p, j) => tx('v' + vi + '.o.a' + j, p));
+
+    // „Moje oznake“: popis grupiran po Uvodu i vremenima
+    const hlItems = [];
+    Object.keys(st.hl || {}).forEach(id => {
+      const loc = this.hlLocate(id); if (!loc) return;
+      const text = loc.text || '';
+      const shown = this.hlRanges(id, text);
+      (st.hl[id] || []).forEach(([a, b, snip], j) => {
+        const stale = !(text.slice(a, b) === snip || (snip && text.indexOf(snip) >= 0));
+        hlItems.push({ order: loc.order, group: loc.group, where: loc.where, text: snip, stale, pos: a, id,
+          open: () => this.applyHash(loc.hash, false),
+          remove: () => { const hl = Object.assign({}, st.hl); hl[id] = hl[id].filter((_, k) => k !== j); if (!hl[id].length) delete hl[id]; this.saveHl(hl); } });
+      });
+    });
+    // redoslijed kao u vremenu: nagovor, razgovori, osvrt; brojevi numerički
+    const hlKey = (id) => id.replace(/^(v\d+\.)n/, '$1a').replace(/^(v\d+\.)r/, '$1b').replace(/^(v\d+\.)o/, '$1c').replace(/\d+/g, n => n.padStart(4, '0'));
+    hlItems.sort((x, y) => x.order - y.order || (hlKey(x.id) < hlKey(y.id) ? -1 : hlKey(x.id) > hlKey(y.id) ? 1 : x.pos - y.pos));
+    const hlGroups = [];
+    hlItems.forEach(it => { const g = hlGroups[hlGroups.length - 1]; if (g && g.title === it.group) g.items.push(it); else hlGroups.push({ title: it.group, items: [it] }); });
 
     // guide step
     const steps = flow.guideSteps;
@@ -1302,11 +1502,16 @@ class Component extends DCLogic {
     return {
       // routing
       isHome: st.view === 'home', isVrijeme: st.view === 'vrijeme', isSession, isPrirucnik: st.view === 'prirucnik', isUvod: st.view === 'uvod',
-      hasUvod: !!U, uvodIntro: U ? U.intro : [], uvodIntroNotes, hasUvodIntroNotes: uvodIntroNotes.length > 0, uvodSections, uvodToTop: () => { this.setState({ sub: 0 }); jump('uvod-sadrzaj'); },
+      hasUvod: !!U, uvodIntro: U ? U.intro.map((p, j) => tx('u.i' + j, p)) : [], uvodIntroNotes, hasUvodIntroNotes: uvodIntroNotes.length > 0, uvodSections, uvodToTop: () => { this.setState({ sub: 0 }); jump('uvod-sadrzaj'); },
       uvodScrollMargin: showChrome ? '64px' : '70px',
       anchorMargin: showChrome ? '150px' : '100px',
       shareHere: () => this.share(V ? V.title + ' — ' + V.nagovorTitle : ''),
       hasToast: !!st.toast, toast: st.toast,
+      isOznake: st.view === 'oznake', openOznake: () => { this.setState({ view: 'oznake', drawer: false }); try { window.scrollTo(0, 0); } catch (e) {} },
+      hlGroups, hasHl: hlItems.length > 0, noHl: hlItems.length === 0,
+      hasHlUi: !!st.hlUi, hlLabel: st.hlUi && st.hlUi.mode === 'remove' ? 'Ukloni oznaku' : 'Označi',
+      hlUiStyle: st.hlUi ? 'position:fixed;z-index:61;left:' + st.hlUi.x + 'px;top:' + st.hlUi.y + 'px;transform:translateX(-50%);' : 'display:none;',
+      hlAction: () => this.hlApply(),
       v: V ? Object.assign({}, V, { num: num2(vi + 1) }) : { num: num2(vi + 1), title: '', nagovorTitle: '', nagovor: [], razgovori: [] },
       vKey: 'v' + vi,
       nagSections, prirucnik, smjernice, hasSmjernice,
