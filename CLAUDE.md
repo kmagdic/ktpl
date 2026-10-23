@@ -25,12 +25,22 @@ Ključno:
   service worker rade **samo preko HTTPS-a** (ili `localhost`).
 
 - Nakon **svake promjene** `index.html`, `support.js` ili `data/vremena.json`
-  podići `CACHE` u `jalics/sw.js` (npr. `kontempl-v6` → `kontempl-v7`), inače
-  instalirana PWA i dalje servira staru verziju iz predmemorije. Istodobno
-  ažurirati `appVersion` u `index.html` (isti broj + datum) — prikazuje se
-  na dnu početnog zaslona („Verzija 8 · 23. 10. 2026.“). Service worker je *network-first* za
+  podići verziju za 0.1 (1.9 → 2.0) na **dva mjesta**: `appVersion` u
+  `index.html` (broj + datum, prikazuje se na dnu početnog zaslona:
+  „Verzija 1.9 · 23. 10. 2026.“) i `CACHE` u `jalics/sw.js` (`kontempl-1.9`).
+  Promjena `CACHE` briše staru predmemoriju. Service worker je *network-first* za
   vlastite datoteke (offline pada na predmemoriju), pa korisnici novu verziju
   dobiju već pri sljedećem učitavanju.
+- **Tamni okvir (trake sustava):** `theme-color` meta (svijetla/tamna po
+  `prefers-color-scheme`, JS ih usklađuje s ručno odabranom temom), tamna
+  varijanta u `manifest.webmanifest` (`user_preferences`) i skripta u `<head>`
+  koja prepozna Chrome Auto Dark (klasa `auto-tamno` → tamna pozadina
+  `#14120f`). Isto rješenje kao u projektu behealed_tree.
+  `theme_color` u manifestu **namjerno nema**: donja traka instalirane
+  aplikacije uzima ga iz manifesta (samo jedna vrijednost), a bez njega prati
+  temu mobitela. Promjena manifesta do instalirane aplikacije stiže tek kad
+  Chrome osvježi WebAPK (do nekoliko dana; najbrže: deinstalirati i ponovno
+  instalirati). U CSS komentarima ne pisati oznake tagova (npr. `</style>`).
 
 ### Sadržaj knjige → `vremena.json`
 Izvor teksta je **lektorirano izdanje** knjige (Zaklada biskup Josip Lang,
