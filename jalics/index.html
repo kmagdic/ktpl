@@ -117,6 +117,7 @@
       </button>
     </div>
     <p style="text-align:center;color:#a59a86;font-size:12.5px;margin-top:26px;line-height:1.6;">Napredak i bilješke spremaju se na ovom uređaju.<br>Poštuj svoj nutarnji ritam — ne prelazi dalje prije nego si spreman.</p>
+    <p style="text-align:center;color:#a59a86;font-size:11.5px;margin-top:6px;letter-spacing:0.04em;">Verzija {{ appVersion }}</p>
   </div>
   </div>
   </sc-if>
@@ -608,6 +609,8 @@ class Component extends DCLogic {
     'Zaključak: tražiti Boga samoga, a ne samo njegove darove.',
   ];
 
+  // držati usklađeno s CACHE u sw.js (kontempl-vN → N)
+  appVersion = '6 · 23. 10. 2026.';
   heroImg = 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1900&q=74';
   imgs = [
     'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1500&q=74',
@@ -1106,6 +1109,7 @@ class Component extends DCLogic {
       showInstall: !st.standalone, canInstall: st.canInstall, installHelp: st.installHelp,
       installApp: () => { if (this._ip) { const ip = this._ip; ip.prompt(); ip.userChoice.finally(() => { this._ip = null; this.setState({ canInstall: false }); }); } else { this.setState({ installHelp: !st.installHelp }); } },
 
+      appVersion: this.appVersion,
       heroImg: this.heroImg, vImg: this.imgs[vi], vSummary: this.summaries[vi],
       cards, sound: st.sound, soundOff: !st.sound,
       toggleSound: () => { const s = !st.sound; this.setState({ sound: s }); try { localStorage.setItem('jalics_settings', JSON.stringify({ sound: s, theme: st.theme })); } catch (e) {} },
