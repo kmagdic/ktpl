@@ -1,5 +1,5 @@
 /* Service worker — Kontemplativne duhovne vježbe (PWA offline shell) */
-const CACHE = 'kontempl-v5';
+const CACHE = 'kontempl-v6';
 const CORE = [
   './',
   './support.js',

@@ -275,7 +275,7 @@
                     <sc-for list="{{ r.turns }}" as="t" hint-placeholder-count="3">
                       <div style="margin-top:13px;">
                         <div style="font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#a8623a;margin-bottom:2px;">{{ t.speaker }}</div>
-                        <div style="font-size:16.5px;line-height:1.68;color:#3f3930;">{{ t.text }}</div>
+                        <div style="font-size:16.5px;line-height:1.68;color:#3f3930;white-space:pre-line;">{{ t.text }}</div>
                       </div>
                     </sc-for>
                   </div>
@@ -310,6 +310,9 @@
               </div>
             </div>
           </sc-if>
+          <sc-for list="{{ osvrtParasAfter }}" as="p" hint-placeholder-count="0">
+            <p style="font-size:18px;line-height:1.76;color:#3f3930;margin:26px 0 15px;text-wrap:pretty;">{{ p }}</p>
+          </sc-for>
 
           <div style="margin-top:34px;">
             <div style="letter-spacing:0.22em;text-transform:uppercase;font-size:11px;color:#8a7f6d;margin-bottom:10px;">Moje bilješke</div>
@@ -1051,6 +1054,7 @@ class Component extends DCLogic {
 
     const osvrtParas = V ? V.osvrt.paras : [];
     const osvrtQuestions = V ? V.osvrt.questions : [];
+    const osvrtParasAfter = (V && V.osvrt.parasAfter) || [];
 
     // guide step
     const steps = flow.guideSteps;
@@ -1124,7 +1128,7 @@ class Component extends DCLogic {
       tabIsNagovor: st.tab === 'nagovor', tabIsVjezba: st.tab === 'vjezba',
       tabIsRazgovori: st.tab === 'razgovori', tabIsOsvrt: st.tab === 'osvrt',
 
-      flow, razgovori, osvrtParas, osvrtQuestions, hasQuestions: osvrtQuestions.length > 0,
+      flow, razgovori, osvrtParas, osvrtQuestions, osvrtParasAfter, hasQuestions: osvrtQuestions.length > 0,
 
       // vjezba prep
       silMinutes: st.silMinutes,

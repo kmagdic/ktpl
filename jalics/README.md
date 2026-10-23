@@ -114,9 +114,15 @@ Niz od 10 objekata (redoslijed = redoslijed poglavlja):
   "razgovori":[ { "name": "BARBARA", "display": "Barbara",
                   "summary": "Još nisam došla k sebi.",
                   "turns": [ { "speaker": "Voditelj"|"Barbara", "text": "…" } ] } ],
-  "osvrt":    { "paras": ["…"], "questions": ["…"] }
+  "osvrt":    { "paras": ["…"], "questions": ["…"], "parasAfter": ["…"] }
 }
 ```
+- Tekst je iz lektoriranog izdanja (Zaklada biskup Josip Lang, 2026; PDF u
+  `nagovori/`). Odlomci prate knjigu; replika u razgovoru može imati više
+  odlomaka odvojenih s `\n\n` (prikaz: `white-space:pre-line`).
+- `osvrt.parasAfter` (opcionalno) = tekst koji u knjizi slijedi nakon pitanja.
+- `summary` (nagovor/razgovor), naslovi u `numbered` i `osvrt` desetog vremena
+  nisu iz knjige — uredničko su dodavanje.
 Vođene vježbe (koraci, tempo, trajanja, tekst tišine) NISU u JSON-u — kurirane su
 u logici DC-a kao `this.flows[]` (jedan po vremenu, indeks odgovara JSON-u).
 `summaries[]`, `osvrtSummaries[]`, `essences[]`, `imgs[]`, `imgsCard[]` također su
